@@ -1,0 +1,71 @@
+<!DOCTYPE>
+<html>
+<head>
+<meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+<meta charset="utf-8">
+<title>Lourve</title>
+<style>
+html, body, #map-canvas {
+height: 100%;
+margin: 0px;
+padding: 0px
+}
+</style>
+<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false"></script>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+<script type="text/javascript">
+
+var geocoder = new google.maps.Geocoder();
+var longtitude = 0.0;
+var latitude = 0.0;
+var target_text;
+function search_text(){
+    target_text = document.getElementById('position').value;
+    console.log("Try to find "+target_text);
+
+    if (geocoder) {
+        geocoder.geocode({ 'address': target_text }, function (results, status) {
+                if (status == google.maps.GeocoderStatus.OK) {
+                longtitude = results[0].geometry.location.nb;
+                latitude = results[0].geometry.location.ob;
+                } 
+                else {
+                console.log('No results found: ' + status);
+                }
+                });
+    }
+    console.log("("+longtitude +", "+ latitude+")");
+    initialize();
+}
+
+function initialize() {
+    var myLatlng = new google.maps.LatLng(longtitude,latitude);
+    var mapOptions = {
+zoom: 16,
+      center: myLatlng,
+      mapTypeId: google.maps.MapTypeId.ROADMAP
+    }
+    var map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
+
+    var marker = new google.maps.Marker({
+position: myLatlng,
+map: map,
+title: 'Hello World!'
+});
+}
+
+google.maps.event.addDomListener(window, 'load', initialize);
+
+
+</script>
+</head>
+<body>
+<div>
+<div id="map-canvas"; style="float:left;width:600px;height:600px;"></div>
+<div id="search"; style="float:left;">
+<h2>Type location </h2>
+<input id="position" type="text" name="position" />
+<input type="button" value="Search" Onclick="search_text()" />
+</div>
+</body>
+</html>
